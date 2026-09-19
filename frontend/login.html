@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate CRM — Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="logo-badge">CC</div>
+      <h1>Candidate CRM</h1>
+      <p>Sign in to manage your candidate pipeline</p>
+    </div>
+
+    <div id="login-error" class="login-error"></div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group" id="group-username">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" autocomplete="username" placeholder="Enter your username">
+        <div class="field-error">Please enter your username.</div>
+      </div>
+
+      <div class="form-group" id="group-password">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" autocomplete="current-password" placeholder="Enter your password">
+        <div class="field-error">Please enter your password.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="login-btn">Login</button>
+    </form>
+
+    <p class="login-hint">Contact your administrator if you don't have an account.</p>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

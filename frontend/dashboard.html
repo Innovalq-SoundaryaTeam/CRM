@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate CRM — Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-badge">CC</div>
+      <span>Candidate CRM</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-section="section-dashboard">
+        <span class="nav-icon">&#9632;</span> Dashboard
+      </button>
+      <button class="nav-item" data-section="section-candidates">
+        <span class="nav-icon">&#9776;</span> Candidates
+      </button>
+      <button class="nav-item" data-section="section-add">
+        <span class="nav-icon">&#43;</span> Add Candidate
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="nav-item" id="logout-btn">
+        <span class="nav-icon">&#8594;</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <h2 id="page-title">Dashboard</h2>
+      <div class="user-chip">
+        <div class="avatar-badge" id="avatar-initial">U</div>
+        <span id="current-username">—</span>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- Dashboard summary -->
+      <section id="section-dashboard">
+        <div class="stats-grid" id="my-stats-grid">
+          <div class="stat-card stat-total">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" data-stat="total">0</div>
+          </div>
+          <div class="stat-card stat-hot">
+            <div class="stat-label">Hot</div>
+            <div class="stat-value" data-stat="hot">0</div>
+          </div>
+          <div class="stat-card stat-warm">
+            <div class="stat-label">Warm</div>
+            <div class="stat-value" data-stat="warm">0</div>
+          </div>
+          <div class="stat-card stat-cold">
+            <div class="stat-label">Cold</div>
+            <div class="stat-value" data-stat="cold">0</div>
+          </div>
+          <div class="stat-card stat-completed">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" data-stat="completed">0</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Welcome back</h3>
+              <p class="subtitle">Here is a quick summary of your candidate pipeline. Use "Candidates" to search and manage everyone, or "Add Candidate" to log a new one.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Add / Edit candidate form -->
+      <section id="section-add" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 id="form-title">Add Candidate</h3>
+              <p class="subtitle">Enter candidate details and follow-up notes.</p>
+            </div>
+          </div>
+
+          <form id="candidate-form" novalidate>
+            <input type="hidden" id="candidate-id">
+            <div class="form-grid">
+              <div class="form-group" id="group-candidate_name">
+                <label for="candidate_name">Candidate Name</label>
+                <input type="text" id="candidate_name" class="form-control" placeholder="e.g. Priya Sharma">
+                <div class="field-error">Please enter the candidate's full name (min 2 characters).</div>
+              </div>
+
+              <div class="form-group" id="group-contact_number">
+                <label for="contact_number">Contact Number</label>
+                <input type="text" id="contact_number" class="form-control" placeholder="e.g. +91 98765 43210">
+                <div class="field-error">Please enter a valid contact number.</div>
+              </div>
+
+              <div class="form-group" id="group-status">
+                <label for="status">Status</label>
+                <select id="status" class="form-control">
+                  <option value="HOT">Hot</option>
+                  <option value="WARM" selected>Warm</option>
+                  <option value="COLD">Cold</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="DROP">Drop</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width" id="group-comments">
+                <label for="comments">Comments</label>
+                <textarea id="comments" class="form-control" placeholder="Follow-up notes, interview feedback, next steps…"></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="save-candidate-btn">Add Candidate</button>
+              <button type="button" class="btn btn-secondary hidden" id="update-candidate-btn">Update Candidate</button>
+              <button type="button" class="btn btn-secondary" id="clear-form-btn">Clear</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Candidate list -->
+      <section id="section-candidates">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>My Candidates <span class="pill-count" id="candidate-count">0</span></h3>
+              <p class="subtitle">Search, filter and manage your candidates.</p>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <div class="search-box">
+              <input type="text" id="search-input" class="form-control" placeholder="Search by name or contact number…">
+            </div>
+            <select id="status-filter" class="form-control">
+              <option value="">All Statuses</option>
+              <option value="HOT">Hot</option>
+              <option value="WARM">Warm</option>
+              <option value="COLD">Cold</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="DROP">Drop</option>
+            </select>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate Name</th>
+                  <th>Contact Number</th>
+                  <th>Status</th>
+                  <th>Comments</th>
+                  <th>Created Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="candidates-tbody">
+              </tbody>
+            </table>
+          </div>
+          <div class="empty-state hidden" id="empty-state">
+            <div class="empty-icon">&#128203;</div>
+            <p>No candidates found. Try adjusting your search or add a new candidate.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- View candidate modal -->
+<div class="modal-overlay" id="view-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Candidate Details</h3>
+      <button class="modal-close" data-close-modal="view-modal">&times;</button>
+    </div>
+    <div class="modal-body" id="view-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal="view-modal">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Delete Candidate</h3>
+      <button class="modal-close" data-close-modal="delete-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete <strong id="delete-candidate-name"></strong>? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal="delete-modal">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
