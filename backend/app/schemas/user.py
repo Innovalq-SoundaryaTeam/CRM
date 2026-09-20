@@ -46,8 +46,18 @@ class UserCreate(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
     role: Optional[UserRole] = None
     is_active: Optional[bool] = None
+
+    @field_validator("username")
+    @classmethod
+    def username_no_spaces(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        if " " in v:
+            raise ValueError("Username must not contain spaces")
+        return v.strip()
 
 
 class PasswordResetRequest(BaseModel):

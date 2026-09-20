@@ -326,7 +326,8 @@ function openUserModal(user) {
   document.getElementById("user-modal-title").textContent = isEdit ? "Edit User" : "New User";
   document.getElementById("user-edit-id").value = isEdit ? user.id : "";
   document.getElementById("new-username").value = isEdit ? user.username : "";
-  document.getElementById("new-username").disabled = isEdit;
+  document.getElementById("new-username").disabled = false;
+  document.getElementById("group-new-username").classList.remove("has-error");
   document.getElementById("new-password").value = "";
   document.getElementById("group-new-password").classList.toggle("hidden", isEdit);
   document.getElementById("new-role").value = isEdit ? user.role : "USER";
@@ -371,11 +372,18 @@ async function handleSaveUser() {
       btn.disabled = false;
     }
   } else {
+    const username = document.getElementById("new-username").value.trim();
+    if (username.length < 3 || /\s/.test(username)) {
+      document.getElementById("group-new-username").classList.add("has-error");
+      return;
+    }
+    document.getElementById("group-new-username").classList.remove("has-error");
+
     btn.disabled = true;
     try {
       await apiRequest(`/api/admin/users/${id}`, {
         method: "PUT",
-        body: { role: document.getElementById("new-role").value },
+        body: { username, role: document.getElementById("new-role").value },
       });
       showToast("User updated successfully.");
       closeModal("user-modal");

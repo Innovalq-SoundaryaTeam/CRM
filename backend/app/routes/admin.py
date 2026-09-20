@@ -139,6 +139,14 @@ def admin_update_user(user_id: int, payload: UserUpdate, db: Session = Depends(g
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     updates = payload.model_dump(exclude_unset=True)
+    if "username" in updates and updates["username"] != user.username:
+        existing = (
+            db.query(User)
+            .filter(User.username == updates["username"], User.id != user_id)
+            .first()
+        )
+        if existing:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exists")
     for field, value in updates.items():
         setattr(user, field, value)
     db.commit()
