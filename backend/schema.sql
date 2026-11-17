@@ -25,6 +25,7 @@ CREATE TABLE candidates (
     id               SERIAL PRIMARY KEY,
     candidate_name   VARCHAR(150) NOT NULL,
     contact_number   VARCHAR(20) NOT NULL,
+    email            VARCHAR(255),
     status           candidate_status NOT NULL DEFAULT 'WARM',
     comments         TEXT,
     user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

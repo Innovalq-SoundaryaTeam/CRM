@@ -51,6 +51,8 @@ function wireNav() {
         "section-overview": "Admin Dashboard",
         "section-candidates": "All Candidates",
         "section-users": "User Management",
+        "section-import": "Import",
+        "section-export": "Export",
       };
       document.getElementById("page-title").textContent = titles[item.dataset.section] || "Admin Dashboard";
     });

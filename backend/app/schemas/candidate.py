@@ -8,11 +8,13 @@ from pydantic import BaseModel, Field, ConfigDict, field_validator
 from app.models.candidate import CandidateStatus
 
 PHONE_REGEX = re.compile(r"^[0-9+\-\s()]{7,20}$")
+EMAIL_REGEX = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 class CandidateBase(BaseModel):
     candidate_name: str = Field(..., min_length=2, max_length=150)
     contact_number: str = Field(..., min_length=7, max_length=20)
+    email: Optional[str] = Field(default=None, max_length=255)
     status: CandidateStatus = CandidateStatus.WARM
     comments: Optional[str] = Field(default=None, max_length=4000)
 
@@ -35,6 +37,18 @@ class CandidateBase(BaseModel):
             )
         return v
 
+    @field_validator("email")
+    @classmethod
+    def valid_email(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        v = v.strip()
+        if not v:
+            return None
+        if not EMAIL_REGEX.match(v):
+            raise ValueError("Email format is invalid")
+        return v
+
 
 class CandidateCreate(CandidateBase):
     pass
@@ -43,6 +57,7 @@ class CandidateCreate(CandidateBase):
 class CandidateUpdate(BaseModel):
     candidate_name: Optional[str] = Field(default=None, min_length=2, max_length=150)
     contact_number: Optional[str] = Field(default=None, min_length=7, max_length=20)
+    email: Optional[str] = Field(default=None, max_length=255)
     status: Optional[CandidateStatus] = None
     comments: Optional[str] = Field(default=None, max_length=4000)
 
@@ -54,6 +69,18 @@ class CandidateUpdate(BaseModel):
         v = v.strip()
         if not PHONE_REGEX.match(v):
             raise ValueError("Contact number format is invalid")
+        return v
+
+    @field_validator("email")
+    @classmethod
+    def valid_email(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        v = v.strip()
+        if not v:
+            return None
+        if not EMAIL_REGEX.match(v):
+            raise ValueError("Email format is invalid")
         return v
 
 
@@ -77,3 +104,12 @@ class DashboardStats(BaseModel):
     cold: int
     completed: int
     drop: int
+
+
+class ImportSummary(BaseModel):
+    total: int
+    imported: int
+    duplicate_in_db: int
+    duplicate_in_file: int
+    failed: int
+    failed_records: list[dict] = []

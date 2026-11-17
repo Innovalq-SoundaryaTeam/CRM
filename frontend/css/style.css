@@ -698,6 +698,34 @@ table.data-table tbody tr:hover { background: #fafbfc; }
 }
 
 /* ---------------------------------------------------------------------
+   Import / Export
+   --------------------------------------------------------------------- */
+
+.dropzone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  text-align: center;
+  padding: 36px 20px;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.dropzone p { margin: 4px 0; }
+
+.dropzone-icon {
+  font-size: 34px;
+  margin-bottom: 6px;
+  opacity: .8;
+}
+
+/* ---------------------------------------------------------------------
    Responsive
    --------------------------------------------------------------------- */
 

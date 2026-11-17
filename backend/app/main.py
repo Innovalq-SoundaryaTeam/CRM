@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import settings
-from app.routes import auth, candidates, admin
+from app.routes import auth, candidates, admin, import_export
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("crm")
@@ -69,6 +69,13 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 # Routers
 # ---------------------------------------------------------------------------
 app.include_router(auth.router)
+# import_export must be registered before candidates: both share the
+# "/api/candidates" prefix, and candidates.py has a generic
+# "/{candidate_id}" route. Without this ordering, a request to
+# /api/candidates/import or /export would match {candidate_id} first and
+# fail with a 422 (can't parse "import" as an int) instead of reaching
+# these routes.
+app.include_router(import_export.router)
 app.include_router(candidates.router)
 app.include_router(admin.router)
 

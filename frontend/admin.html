@@ -25,6 +25,12 @@
       <button class="nav-item" data-section="section-users">
         <span class="nav-icon">&#128101;</span> User Management
       </button>
+      <button class="nav-item" data-section="section-import">
+        <span class="nav-icon">&#8679;</span> Import
+      </button>
+      <button class="nav-item" data-section="section-export">
+        <span class="nav-icon">&#8681;</span> Export
+      </button>
     </nav>
     <div class="sidebar-footer">
       <button class="nav-item" id="logout-btn">
@@ -162,6 +168,69 @@
               </thead>
               <tbody id="users-tbody"></tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Import candidates from Excel -->
+      <section id="section-import" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Import Candidates</h3>
+              <p class="subtitle">Upload an Excel file (.xlsx or .xls). Name, Phone and Email columns are detected automatically regardless of order or exact header wording. Duplicate phone numbers are skipped, and every new candidate is added as Cold.</p>
+            </div>
+          </div>
+
+          <div class="dropzone" id="import-dropzone">
+            <div class="dropzone-icon">&#128228;</div>
+            <p><strong>Click to choose a file</strong>, or drag and drop it here</p>
+            <p class="text-muted" style="margin:4px 0 0;">.xlsx or .xls, up to 15 MB</p>
+            <input type="file" id="import-file-input" accept=".xlsx,.xlsm,.xls" hidden>
+          </div>
+
+          <div id="import-selected-file" class="hidden" style="margin-top:14px; display:flex; align-items:center; gap:10px;">
+            <span id="import-file-name" class="text-muted"></span>
+            <button class="btn btn-primary" id="import-upload-btn">Upload &amp; Import</button>
+            <button class="btn btn-secondary" id="import-cancel-btn">Cancel</button>
+          </div>
+
+          <div id="import-progress" class="hidden" style="margin-top:14px;">
+            <p class="text-muted">Importing… this can take a moment for large files. Please don't close this page.</p>
+          </div>
+
+          <div id="import-summary" class="hidden" style="margin-top:22px;">
+            <div class="stats-grid">
+              <div class="stat-card stat-total"><div class="stat-label">Total Rows</div><div class="stat-value" data-sum="total">0</div></div>
+              <div class="stat-card stat-cold"><div class="stat-label">Imported</div><div class="stat-value" data-sum="imported">0</div></div>
+              <div class="stat-card stat-warm"><div class="stat-label">Duplicate in DB</div><div class="stat-value" data-sum="duplicate_in_db">0</div></div>
+              <div class="stat-card stat-hot"><div class="stat-label">Duplicate in File</div><div class="stat-value" data-sum="duplicate_in_file">0</div></div>
+              <div class="stat-card stat-drop"><div class="stat-label">Failed</div><div class="stat-value" data-sum="failed">0</div></div>
+            </div>
+            <button class="btn btn-secondary hidden" id="import-download-failed-btn" style="margin-top:14px;">Download Failed Records</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Export candidates to Excel -->
+      <section id="section-export" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Export Candidates</h3>
+              <p class="subtitle">Download the complete candidate list across all users for a status, as an Excel file.</p>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select id="export-status-select" class="form-control">
+              <option value="">All Statuses</option>
+              <option value="HOT">Hot</option>
+              <option value="WARM">Warm</option>
+              <option value="COLD">Cold</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="DROP">Drop</option>
+            </select>
+            <button class="btn btn-primary" id="export-download-btn">Download Excel</button>
           </div>
         </div>
       </section>
@@ -305,5 +374,6 @@
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/admin.js"></script>
+<script src="js/import-export.js"></script>
 </body>
 </html>

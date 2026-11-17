@@ -43,6 +43,8 @@ function wireNav() {
         "section-dashboard": "Dashboard",
         "section-candidates": "Candidates",
         "section-add": "Add Candidate",
+        "section-import": "Import",
+        "section-export": "Export",
       };
       document.getElementById("page-title").textContent = titles[item.dataset.section] || "Dashboard";
     });

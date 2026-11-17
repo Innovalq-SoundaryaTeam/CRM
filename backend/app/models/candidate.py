@@ -31,6 +31,7 @@ class Candidate(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     candidate_name: Mapped[str] = mapped_column(String(150), nullable=False, index=True)
     contact_number: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     status: Mapped[CandidateStatus] = mapped_column(
         SAEnum(CandidateStatus, name="candidate_status", native_enum=True),
         nullable=False,
