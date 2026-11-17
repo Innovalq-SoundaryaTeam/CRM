@@ -122,6 +122,7 @@ async function handleImportUpload() {
     if (typeof loadCandidates === "function") loadCandidates();
     if (typeof loadDashboardStats === "function") loadDashboardStats();
     if (typeof loadAdminCandidates === "function") loadAdminCandidates();
+    loadExportPreview();
   } catch (err) {
     showToast(err.message, "error");
   } finally {
@@ -162,6 +163,65 @@ function downloadFailedRecords() {
 
 function wireExportUi() {
   document.getElementById("export-download-btn").addEventListener("click", handleExportDownload);
+  document.getElementById("export-status-select").addEventListener("change", loadExportPreview);
+
+  const exportNavBtn = document.querySelector('.nav-item[data-section="section-export"]');
+  if (exportNavBtn) exportNavBtn.addEventListener("click", loadExportPreview);
+
+  loadExportPreview();
+}
+
+// isAdminPage() is decided by which page-specific script is loaded: admin.js
+// defines loadAdminCandidates(), dashboard.js defines loadCandidates(). That
+// tells us whether to call the cross-user admin endpoint or the user-scoped
+// one - exactly mirroring what the actual export endpoint does server-side.
+function isAdminPage() {
+  return typeof loadAdminCandidates === "function";
+}
+
+async function loadExportPreview() {
+  const status = document.getElementById("export-status-select").value;
+  const endpoint = isAdminPage() ? "/api/admin/candidates" : "/api/candidates";
+  const params = new URLSearchParams();
+  if (status) params.set("status_filter", status);
+
+  try {
+    const candidates = await apiRequest(`${endpoint}?${params.toString()}`);
+    renderExportPreview(candidates);
+  } catch (err) {
+    showToast(err.message, "error");
+  }
+}
+
+function renderExportPreview(candidates) {
+  const tbody = document.getElementById("export-preview-tbody");
+  const emptyState = document.getElementById("export-preview-empty");
+  const countEl = document.getElementById("export-preview-count");
+  if (countEl) countEl.textContent = candidates.length;
+
+  if (candidates.length === 0) {
+    tbody.innerHTML = "";
+    emptyState.classList.remove("hidden");
+    return;
+  }
+  emptyState.classList.add("hidden");
+
+  const admin = isAdminPage();
+  tbody.innerHTML = candidates
+    .map((c) => {
+      const ownerCell = admin ? `<td>${escapeHtml(c.owner_username || "")}</td>` : "";
+      return `
+      <tr>
+        <td>${escapeHtml(c.candidate_name)}</td>
+        <td>${escapeHtml(c.contact_number)}</td>
+        <td>${escapeHtml(c.email || "—")}</td>
+        <td><span class="${statusBadgeClass(c.status)}">${escapeHtml(c.status)}</span></td>
+        <td class="cell-comments" title="${escapeHtml(c.comments || "")}">${escapeHtml(c.comments || "—")}</td>
+        ${ownerCell}
+        <td>${formatDateTime(c.created_at)}</td>
+      </tr>`;
+    })
+    .join("");
 }
 
 async function handleExportDownload() {

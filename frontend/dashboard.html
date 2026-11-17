@@ -227,8 +227,8 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h3>Export Candidates</h3>
-              <p class="subtitle">Download your complete candidate list for a status as an Excel file.</p>
+              <h3>Export Candidates <span class="pill-count" id="export-preview-count">0</span></h3>
+              <p class="subtitle">Pick a status to preview the matching candidates below, then download the complete list as an Excel file.</p>
             </div>
           </div>
           <div class="toolbar">
@@ -241,6 +241,26 @@
               <option value="DROP">Drop</option>
             </select>
             <button class="btn btn-primary" id="export-download-btn">Download Excel</button>
+          </div>
+
+          <div class="table-wrapper" style="margin-top:16px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate Name</th>
+                  <th>Contact Number</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Comments</th>
+                  <th>Created Date</th>
+                </tr>
+              </thead>
+              <tbody id="export-preview-tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state hidden" id="export-preview-empty">
+            <div class="empty-icon">&#128203;</div>
+            <p>No candidates match this status.</p>
           </div>
         </div>
       </section>
